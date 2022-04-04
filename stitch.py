@@ -29,8 +29,23 @@ class stitch:
             print("Not enough optimal points found")
         return h_3x3
 
-    def mask(self, img1, img2):
-        return 0
+    def combine(self, img1, img2, h_3x3):
+        w1, h1 = img1.shape[:2]
+        w2, h2 = img2.shape[:2]
+        pts1 = np.float32([[0, 0], [0, w1], [h1, w1], [h1, 0]]).reshape(-1, 1, 2)
+        pts2 = np.float32([[0, 0], [0, w2], [h2, w2], [h2, 0]]).reshape(-1, 1, 2)
+        new_pts2 = cv2.perspectiveTransform(pts2, h_3x3)
+        pts = np.concatenate((pts1, new_pts2), axis=0)
+
+        [x_min, y_min] = np.int32(pts.min(axis=0).ravel() - 0.5)
+        [x_max, y_max] = np.int32(pts.max(axis=0).ravel() + 0.5)
+        transform = np.array([[1, 0, -x_min], [0, 1, -y_min], [0, 0, 1]])
+
+        result = cv2.warpPerspective(img2, transform.dot(h_3x3),
+                                     (x_max-x_min, y_max-y_min))
+
+        result[-y_min:-y_min + w1, -x_min:-x_min + h1] = img2
+        return result
 
     def blend(self, img1, img2):
         return 0
@@ -46,4 +61,6 @@ if __name__ == "__main__":
     img1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
     img2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
     h = stitcher.match(img1_gray, img2_gray)
-    print(h)
+    result = stitcher.combine(img1=im1, img2=im2, h_3x3=h)
+    cv2.imshow("result", result)
+    cv2.waitKey(0)
