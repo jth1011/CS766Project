@@ -23,44 +23,61 @@ class stitch:
                 [feat1['kp'][i].pt for (_, i) in optimal_points] )
             img2_kp = np.float32(
                 [feat2['kp'][i].pt for (i, _) in optimal_points] )
-            h_3x3, status = cv2.findHomography(img1_kp, img2_kp, cv2.RANSAC,
+            h_3x3, status = cv2.findHomography(img2_kp, img1_kp, cv2.RANSAC,
                         ransacReprojThreshold=self.ransacThresh, maxIters=self.ransacIters)
         else:
             print("Not enough optimal points found")
         return h_3x3
 
-    def combine(self, img1, img2, h_3x3):
+    def get_stitched_image(self, img1, img2, M):
+
+        # Get width and height of input images
         w1, h1 = img1.shape[:2]
         w2, h2 = img2.shape[:2]
-        pts1 = np.float32([[0, 0], [0, w1], [h1, w1], [h1, 0]]).reshape(-1, 1, 2)
-        pts2 = np.float32([[0, 0], [0, w2], [h2, w2], [h2, 0]]).reshape(-1, 1, 2)
-        new_pts2 = cv2.perspectiveTransform(pts2, h_3x3)
-        pts = np.concatenate((pts1, new_pts2), axis=0)
 
-        [x_min, y_min] = np.int32(pts.min(axis=0).ravel() - 0.5)
-        [x_max, y_max] = np.int32(pts.max(axis=0).ravel() + 0.5)
-        transform = np.array([[1, 0, -x_min], [0, 1, -y_min], [0, 0, 1]])
+        # Get the canvas dimesions
+        img1_dims = np.float32([[0, 0], [0, w1], [h1, w1], [h1, 0]]).reshape(-1, 1, 2)
+        img2_dims_temp = np.float32([[0, 0], [0, w2], [h2, w2], [h2, 0]]).reshape(-1, 1, 2)
 
-        result = cv2.warpPerspective(img2, transform.dot(h_3x3),
-                                     (x_max-x_min, y_max-y_min))
+        # Get relative perspective of second image
+        img2_dims = cv2.perspectiveTransform(img2_dims_temp, M)
 
-        result[-y_min:-y_min + w1, -x_min:-x_min + h1] = img2
-        return result
+        # Resulting dimensions
+        result_dims = np.concatenate((img1_dims, img2_dims), axis=0)
 
-    def blend(self, img1, img2):
-        return 0
+        # Getting images together
+        # Calculate dimensions of match points
+        [x_min, y_min] = np.int32(result_dims.min(axis=0).ravel())
+        [x_max, y_max] = np.int32(result_dims.max(axis=0).ravel())
+
+        # Create output array after affine transformation
+        transform_dist = [-x_min, -y_min]
+        transform_array = np.array([[1, 0, transform_dist[0]],
+                                    [0, 1, transform_dist[1]],
+                                    [0, 0, 1]])
+
+        # Warp images to get the resulting image
+        result_img = cv2.warpPerspective(img2, transform_array.dot(M),
+                (x_max - x_min, y_max - y_min), flags=cv2.INTER_LINEAR)
+        result_img[transform_dist[1]:w1 + transform_dist[1],
+        transform_dist[0]:h1 + transform_dist[0]] = img1
+
+        # Return the result
+        return result_img
 
     def getSIFTFeatures(self, img):
         kp, des = self.sift.detectAndCompute(img, None)
         return {'kp':kp, 'des':des}
 
+
 if __name__ == "__main__":
     stitcher = stitch()
     im1 = cv2.imread("mountain_left.png", cv2.IMREAD_COLOR)
     im2 = cv2.imread("mountain_center.png", cv2.IMREAD_COLOR)
+    im3 = cv2.imread("mountain_right.png", cv2.IMREAD_COLOR)
     img1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
     img2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
-    h = stitcher.match(img1_gray, img2_gray)
-    result = stitcher.combine(img1=im1, img2=im2, h_3x3=h)
+    h12 = stitcher.match(im2, im1)
+    result = stitcher.get_stitched_image(im2, im1, h12)
     cv2.imshow("result", result)
     cv2.waitKey(0)
