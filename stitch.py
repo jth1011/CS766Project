@@ -81,3 +81,4 @@ if __name__ == "__main__":
     result = stitcher.get_stitched_image(im2, im1, h12)
     cv2.imshow("result", result)
     cv2.waitKey(0)
+    cv2.imwrite("mountain_result.png",result)
