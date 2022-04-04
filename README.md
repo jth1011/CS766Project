@@ -1,1 +1,3 @@
 # CS766Project
+
+![alt text](https://github.com/jth1011/CS766Project/blob/main/mountain_result.png?raw=true)
