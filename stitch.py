@@ -3,7 +3,7 @@ import numpy as np
 
 class stitch:
 
-    def __init__(self, matches=10, ratio=0.75, window_size=500, ransacThresh=1.0, maxIters=1000):
+    def __init__(self, matches=10, ratio=0.75, window_size=500, ransacThresh=1.0, maxIters=500):
         self.min_matches = matches
         self.ratio = ratio
         self.smoothing_window = window_size
@@ -63,13 +63,13 @@ class stitch:
 
 if __name__ == "__main__":
     stitcher = stitch()
-    im1 = cv2.imread("mountain_left.png", cv2.IMREAD_COLOR)
-    im2 = cv2.imread("mountain_center.png", cv2.IMREAD_COLOR)
-    im3 = cv2.imread("mountain_right.png", cv2.IMREAD_COLOR)
+    im1 = cv2.imread("imgs/jackson_image1.jpg", cv2.IMREAD_COLOR)
+    im2 = cv2.imread("imgs/jackson_image2.jpg", cv2.IMREAD_COLOR)
+    im3 = cv2.imread("imgs/jackson_image3.jpg", cv2.IMREAD_COLOR)
     img1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
     img2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
-    h12 = stitcher.match(im2, im1)
+    h12 = stitcher.match(img2_gray, img1_gray)
     result = stitcher.createStitch(im2, im1, h12)
-    cv2.imshow("result", result)
-    cv2.waitKey(0)
-    cv2.imwrite("mountain_result.png",result)
+    h23 = stitcher.match(cv2.cvtColor(result,cv2.COLOR_BGR2GRAY), im3)
+    result = stitcher.createStitch(result, im3, h23)
+    cv2.imwrite("result.png",result)
