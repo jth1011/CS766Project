@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-class stitch:
+class stitcher:
 
     def __init__(self, matches=16, ratio=0.8, ransacThresh=5.0, maxIters=1000):
         self.min_matches = matches
@@ -57,10 +57,10 @@ class stitch:
 
     def mean_blend(self, img1, img2):
         assert (img1.shape == img2.shape)
-        locs1 = np.where(cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY) != 0)
+        locs1 = np.where(img1 != 0)
         blended1 = np.copy(img2)
         blended1[locs1[0], locs1[1]] = img1[locs1[0], locs1[1]]
-        locs2 = np.where(cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY) != 0)
+        locs2 = np.where(img2 != 0)
         blended2 = np.copy(img1)
         blended2[locs2[0], locs2[1]] = img2[locs2[0], locs2[1]]
         blended = cv2.addWeighted(blended1, 0.5, blended2, 0.5, 0)
@@ -74,17 +74,3 @@ class stitch:
     def getSIFTFeatures(self, img):
         kp, des = self.sift.detectAndCompute(img, None)
         return {'kp':kp, 'des':des}
-
-
-if __name__ == "__main__":
-    stitcher = stitch()
-    im1 = cv2.imread("imgs/jackson_image1_lr.jpg", cv2.IMREAD_COLOR)
-    im2 = cv2.imread("imgs/jackson_image2_lr.jpg", cv2.IMREAD_COLOR)
-    im3 = cv2.imread("imgs/jackson_image3_lr.jpg", cv2.IMREAD_COLOR)
-    img1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
-    img2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
-    h12 = stitcher.match(im2, im1)
-    result = stitcher.combine(im2, im1, h12, blend=True)
-    h23 = stitcher.match(result, im3)
-    result = stitcher.combine(result, im3, h23, blend=True)
-    cv2.imwrite("result.png",stitcher.crop(result))
