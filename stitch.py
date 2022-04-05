@@ -3,10 +3,9 @@ import numpy as np
 
 class stitch:
 
-    def __init__(self, matches=10, ratio=0.75, window_size=500, ransacThresh=1.0, maxIters=500):
+    def __init__(self, matches=16, ratio=0.8, ransacThresh=5.0, maxIters=1000):
         self.min_matches = matches
         self.ratio = ratio
-        self.smoothing_window = window_size
         self.ransacThresh = ransacThresh
         self.ransacIters = maxIters
         self.sift = cv2.SIFT_create()
@@ -29,32 +28,48 @@ class stitch:
             print("Not enough optimal points found")
         return h_3x3
 
-    def createStitch(self, img1, img2, M):
+    def combine(self, img0, img1, h_matrix, blend):
 
-        w1, h1 = img1.shape[:2]
-        w2, h2 = img2.shape[:2]
+        points0 = np.float32([[0, 0], [0, img0.shape[0]], [img0.shape[1],
+                        img0.shape[0]], [img0.shape[1], 0]]).reshape((-1, 1, 2))
 
-        img1_dims = np.float32([[0, 0], [0, w1], [h1, w1], [h1, 0]]).reshape(-1, 1, 2)
-        img2_dims_temp = np.float32([[0, 0], [0, w2], [h2, w2], [h2, 0]]).reshape(-1, 1, 2)
+        points1 = np.float32([[0, 0], [0, img1.shape[0]], [img1.shape[1],
+                        img1.shape[0]], [img1.shape[1], 0]],).reshape((-1, 1, 2))
 
-        img2_dims = cv2.perspectiveTransform(img2_dims_temp, M)
+        points2 = cv2.perspectiveTransform(points1, h_matrix)
+        points = np.concatenate((points0, points2), axis=0)
 
-        result_dims = np.concatenate((img1_dims, img2_dims), axis=0)
+        [x_min, y_min] = (points.min(axis=0).ravel() - 0.5).astype(np.int32)
+        [x_max, y_max] = (points.max(axis=0).ravel() + 0.5).astype(np.int32)
 
-        [x_min, y_min] = np.int32(result_dims.min(axis=0).ravel())
-        [x_max, y_max] = np.int32(result_dims.max(axis=0).ravel())
+        h_translation = np.array([[1, 0, -x_min], [0, 1, -y_min], [0, 0, 1]])
 
-        transform_dist = [-x_min, -y_min]
-        transform_array = np.array([[1, 0, transform_dist[0]],
-                                    [0, 1, transform_dist[1]],
-                                    [0, 0, 1]])
+        output_img = cv2.warpPerspective(img1, h_translation.dot(h_matrix),
+                                (x_max - x_min, y_max - y_min), flags=cv2.INTER_CUBIC)
 
-        result_img = cv2.warpPerspective(img2, transform_array.dot(M),
-                (x_max - x_min, y_max - y_min), flags=cv2.INTER_LINEAR)
-        result_img[transform_dist[1]:w1 + transform_dist[1],
-        transform_dist[0]:h1 + transform_dist[0]] = img1
+        if blend:
+            output_img2 = np.zeros_like(output_img)
+            output_img2[-y_min:img0.shape[0] - y_min, -x_min:img0.shape[1] - x_min] = img0
+            return self.mean_blend(output_img, output_img2)
+        else:
+            output_img[-y_min:img0.shape[0] - y_min, -x_min:img0.shape[1] - x_min] = img0
+            return output_img
 
-        return result_img
+    def mean_blend(self, img1, img2):
+        assert (img1.shape == img2.shape)
+        locs1 = np.where(cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY) != 0)
+        blended1 = np.copy(img2)
+        blended1[locs1[0], locs1[1]] = img1[locs1[0], locs1[1]]
+        locs2 = np.where(cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY) != 0)
+        blended2 = np.copy(img1)
+        blended2[locs2[0], locs2[1]] = img2[locs2[0], locs2[1]]
+        blended = cv2.addWeighted(blended1, 0.5, blended2, 0.5, 0)
+        return blended
+
+    def crop(self, img):
+        height, width = img.shape[:2]
+        lim = round(height*0.05)
+        return img[lim:-lim,:]
 
     def getSIFTFeatures(self, img):
         kp, des = self.sift.detectAndCompute(img, None)
@@ -63,13 +78,13 @@ class stitch:
 
 if __name__ == "__main__":
     stitcher = stitch()
-    im1 = cv2.imread("imgs/jackson_image1.jpg", cv2.IMREAD_COLOR)
-    im2 = cv2.imread("imgs/jackson_image2.jpg", cv2.IMREAD_COLOR)
-    im3 = cv2.imread("imgs/jackson_image3.jpg", cv2.IMREAD_COLOR)
+    im1 = cv2.imread("imgs/jackson_image1_lr.jpg", cv2.IMREAD_COLOR)
+    im2 = cv2.imread("imgs/jackson_image2_lr.jpg", cv2.IMREAD_COLOR)
+    im3 = cv2.imread("imgs/jackson_image3_lr.jpg", cv2.IMREAD_COLOR)
     img1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
     img2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
-    h12 = stitcher.match(img2_gray, img1_gray)
-    result = stitcher.createStitch(im2, im1, h12)
-    h23 = stitcher.match(cv2.cvtColor(result,cv2.COLOR_BGR2GRAY), im3)
-    result = stitcher.createStitch(result, im3, h23)
-    cv2.imwrite("result.png",result)
+    h12 = stitcher.match(im2, im1)
+    result = stitcher.combine(im2, im1, h12, blend=True)
+    h23 = stitcher.match(result, im3)
+    result = stitcher.combine(result, im3, h23, blend=True)
+    cv2.imwrite("result.png",stitcher.crop(result))
