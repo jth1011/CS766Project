@@ -50,7 +50,7 @@ class stitcher:
         if blend:
             output_img2 = np.zeros_like(output_img)
             output_img2[-y_min:img0.shape[0] - y_min, -x_min:img0.shape[1] - x_min] = img0
-            return self.mean_blend(output_img, output_img2)
+            return self.mean_blend_smooth(output_img, output_img2)
         else:
             output_img[-y_min:img0.shape[0] - y_min, -x_min:img0.shape[1] - x_min] = img0
             return output_img
@@ -64,6 +64,36 @@ class stitcher:
         blended2 = np.copy(img1)
         blended2[locs2[0], locs2[1]] = img2[locs2[0], locs2[1]]
         blended = cv2.addWeighted(blended1, 0.5, blended2, 0.5, 0)
+        return blended
+
+    def mean_blend_smooth(self, img1, img2):
+        assert (img1.shape == img2.shape)
+
+        # Create distance map for image 1
+        locs1 = np.where(img1 != 0)
+        mask1 = np.zeros(img1.shape[:2], dtype="uint8")
+        mask1[locs1[0], locs1[1]] = 255
+        # These closing operations don't seem to make much of a difference...
+        #mask1 = cv2.morphologyEx(mask1, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5)))
+        d1 = cv2.distanceTransform(mask1, distanceType=cv2.DIST_C, maskSize=cv2.DIST_MASK_3)
+        d1 = d1 / np.max(d1)
+
+        # Create distance map for image 2
+        locs2 = np.where(img2 != 0)
+        mask2 = np.zeros(img2.shape[:2], dtype="uint8")
+        mask2[locs2[0], locs2[1]] = 255
+        #mask2 = cv2.morphologyEx(mask2, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5)))
+        d2 = cv2.distanceTransform(mask2, distanceType=cv2.DIST_C, maskSize=cv2.DIST_MASK_3)
+        d2 = d2 / np.max(d2)
+
+        # Compute the blending weights for each image using distance maps
+        sum = d1 + d2
+        weight1 = np.nan_to_num(d1 / sum)
+        weight2 = np.nan_to_num(d2 / sum)
+
+        # Blend the two images together according to their weights
+        blended = np.rint(np.multiply(img1, weight1) + np.multiply(img2, weight2))
+        blended = blended.astype(np.uint8)
         return blended
 
     def crop(self, img):
