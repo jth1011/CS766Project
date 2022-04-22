@@ -6,7 +6,7 @@ import stitch
 import video
 
 if __name__ == "__main__":
-    pano = stitch.stitcher(ratio=0.75, ransacThresh=4.0, maxIters=1000)
+    pano = stitch.stitcher(ratio=0.5, ransacThresh=4.0, maxIters=500)
     im1 = cv2.imread("imgs/jackson_image1_lr.jpg", cv2.IMREAD_GRAYSCALE)
     im2 = cv2.imread("imgs/jackson_image2_lr.jpg", cv2.IMREAD_GRAYSCALE)
     im3 = cv2.imread("imgs/jackson_image3_lr.jpg", cv2.IMREAD_GRAYSCALE)
@@ -18,8 +18,8 @@ if __name__ == "__main__":
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    #cam1 = video.camThread("Camera 1", 0)
-    #cam2 = video.camThread("Camera 2", 1)
+    cam1 = video.camThread("Camera 1", 1)
+    cam2 = video.camThread("Camera 2", 0)
 
-    #cam1.start()
-    #cam2.start()
+    cam1.start()
+    cam2.start()

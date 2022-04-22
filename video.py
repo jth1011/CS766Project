@@ -13,7 +13,7 @@ class camThread(threading.Thread):
 def camPreview(previewName, camID):
     cv2.namedWindow(previewName)
     cam = cv2.VideoCapture(camID)
-    cam.set(cv2.CAP_PROP_FPS,10) # limit FPS
+    #cam.set(cv2.CAP_PROP_FPS,10) # limit FPS
     cam.set(cv2.CAP_PROP_FRAME_WIDTH,640) # set width
     cam.set(cv2.CAP_PROP_FRAME_HEIGHT,480) # set height
     if cam.isOpened():
@@ -24,8 +24,10 @@ def camPreview(previewName, camID):
     while rval:
         cv2.imshow(previewName, frame)
         rval, frame = cam.read()
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         key = cv2.waitKey(20)
         if key == 27:  # exit on ESC
+            cv2.imwrite("camera_"+str(camID)+".png", frame)
             print("Stopping Camera ",str(camID+1))
             break
     cv2.destroyWindow(previewName)
