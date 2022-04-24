@@ -8,7 +8,7 @@
 	1. [Panorama](#panorama)
 	2. [Object Tracking](#object-tracking)
 5. [Results](#results)
-6. [Conclusion)(#conclusion)
+6. [Conclusion](#conclusion)
   1. [Observations](#observations)
   2. [Challenges](#challenges)
   3. [Future Work](#future-work)
