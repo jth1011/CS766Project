@@ -9,9 +9,9 @@
 	2. [Object Tracking](#object-tracking)
 5. [Results](#results)
 6. [Conclusion](#conclusion)
-  1. [Observations](#observations)
-  2. [Challenges](#challenges)
-  3. [Future Work](#future-work)
+  	1. [Observations](#observations)
+  	2. [Challenges](#challenges)
+  	3. [Future Work](#future-work)
 7. [References](#references)
 
 ### Introduction
@@ -30,11 +30,11 @@
 
 ### Conclusion
 
-### Observations
+#### Observations
 
-### Challenges
+#### Challenges
 
-### Future Work
+#### Future Work
 
 ### References
 
