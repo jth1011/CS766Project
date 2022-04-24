@@ -39,5 +39,5 @@
 ### References
 
 <div style="text-align: center;">
-<img src="https://github.com/jth1011/CS766Project/blob/main/result.png?raw=true" width=500px)>
+<img src="https://github.com/jth1011/CS766Project/blob/main/result.png" width=500px)>
 </div>
