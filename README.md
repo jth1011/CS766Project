@@ -38,6 +38,4 @@
 
 ### References
 
-<div style="text-align: center;">
-<img src="https://github.com/jth1011/CS766Project/blob/main/result.png" width=500px)>
-</div>
+![Example Panorama Image](https://github.com/jth1011/CS766Project/blob/main/result.png)
