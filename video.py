@@ -28,10 +28,11 @@ class videoLoader:
 
 class videoSplitter:
 
-    def __init__(self, rot, trans, crop, height):
+    def __init__(self, rot, trans, jit, crop, height, width):
         self.rot = random.randint(-rot, rot)
         self.trans_x = random.randint(-trans,trans)
         self.trans_y = random.randint(-trans, trans)
+        self.color_jit = random.randint(-jit, jit)
         self.crop = crop
         self.height = height
 
