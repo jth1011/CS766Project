@@ -10,7 +10,7 @@ class videoLoader:
     def __init__(self, path):
         self.img_path = os.path.join(path, "img")
         self.imgs = [img for img in os.listdir(self.img_path) if img.endswith(".jpg")]
-        self.truth = np.loadtxt(os.path.join(path, "groundtruth.txt"), delimiter=',')
+        self.truth = np.loadtxt(os.path.join(path, "groundtruth.txt"), delimiter=',', dtype=np.int16)
         frame = cv2.imread(os.path.join(self.img_path, self.imgs[0]))
         height, width, _ = frame.shape
         self.size = (width, height)
@@ -28,15 +28,17 @@ class videoLoader:
 
 class videoSplitter:
 
-    def __init__(self, rot, crop, height):
-        self.rot1 = random.randint(-rot, rot)
-        self.rot2 = random.randint(-rot, rot)
+    def __init__(self, rot, trans, crop, height):
+        self.rot = random.randint(-rot, rot)
+        self.trans_x = random.randint(-trans,trans)
+        self.trans_y = random.randint(-trans, trans)
         self.crop = crop
         self.height = height
 
     def crop_rot(self, frame):
-        frame_left = imutils.rotate(frame, self.rot1)
-        frame_right = imutils.rotate(frame, self.rot2)
+        frame_left = frame
+        frame_right = imutils.translate(frame, self.trans_x, self.trans_y)
+        frame_right = imutils.rotate(frame_right, self.rot)
         frame_left = frame_left[:self.height, :self.crop]
         frame_right = frame_right[:self.height, -self.crop:]
-        return frame_left, frame_right
+        return frame_left, frame_right, frame
