@@ -90,6 +90,10 @@ class stitcher:
         sum = d1 + d2
         weight1 = np.nan_to_num(d1 / sum)
         weight2 = np.nan_to_num(d2 / sum)
+        print(img1.shape," ",img2.shape)
+        print(weight1.shape," ",weight2.shape)
+        print(np.multiply(img1, weight1).shape)
+        print(np.multiply(img2, weight2).shape)
 
         # Blend the two images together according to their weights
         blended = np.rint(np.multiply(img1, weight1) + np.multiply(img2, weight2))

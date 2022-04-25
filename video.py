@@ -1,33 +1,42 @@
 import cv2
-import threading
+import os
+import imutils
+import random
+import numpy as np
 
-class camThread(threading.Thread):
-    def __init__(self, previewName, camID):
-        threading.Thread.__init__(self)
-        self.previewName = previewName
-        self.camID = camID
-    def run(self):
-        print("Starting " + self.previewName)
-        camPreview(self.previewName, self.camID)
 
-def camPreview(previewName, camID):
-    cv2.namedWindow(previewName)
-    cam = cv2.VideoCapture(camID)
-    #cam.set(cv2.CAP_PROP_FPS,10) # limit FPS
-    cam.set(cv2.CAP_PROP_FRAME_WIDTH,640) # set width
-    cam.set(cv2.CAP_PROP_FRAME_HEIGHT,480) # set height
-    if cam.isOpened():
-        rval, frame = cam.read()
-    else:
-        rval = False
+class videoLoader:
 
-    while rval:
-        cv2.imshow(previewName, frame)
-        rval, frame = cam.read()
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        key = cv2.waitKey(20)
-        if key == 27:  # exit on ESC
-            cv2.imwrite("camera_"+str(camID)+".png", frame)
-            print("Stopping Camera ",str(camID+1))
-            break
-    cv2.destroyWindow(previewName)
+    def __init__(self, path):
+        self.img_path = os.path.join(path, "img")
+        self.imgs = [img for img in os.listdir(self.img_path) if img.endswith(".jpg")]
+        self.truth = np.loadtxt(os.path.join(path, "groundtruth.txt"), delimiter=',')
+        frame = cv2.imread(os.path.join(self.img_path, self.imgs[0]))
+        height, width, _ = frame.shape
+        self.size = (width, height)
+        assert len(self.imgs) == self.truth.shape[0]
+
+    def get_imgs(self):
+        return self.imgs
+
+    def get_truth(self):
+        return self.truth
+
+    def get_size(self):
+        return self.size
+
+
+class videoSplitter:
+
+    def __init__(self, rot, crop, height):
+        self.rot1 = random.randint(-rot, rot)
+        self.rot2 = random.randint(-rot, rot)
+        self.crop = crop
+        self.height = height
+
+    def crop_rot(self, frame):
+        frame_left = imutils.rotate(frame, self.rot1)
+        frame_right = imutils.rotate(frame, self.rot2)
+        frame_left = frame_left[:self.height, :self.crop]
+        frame_right = frame_right[:self.height, -self.crop:]
+        return frame_left, frame_right

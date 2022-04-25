@@ -1,25 +1,24 @@
 import cv2
-import numpy as np
-import argparse
-
+import os
 import stitch
 import video
 
 if __name__ == "__main__":
-    pano = stitch.stitcher(ratio=0.5, ransacThresh=4.0, maxIters=500)
-    im1 = cv2.imread("imgs/jackson_image1_lr.jpg", cv2.IMREAD_GRAYSCALE)
-    im2 = cv2.imread("imgs/jackson_image2_lr.jpg", cv2.IMREAD_GRAYSCALE)
-    im3 = cv2.imread("imgs/jackson_image3_lr.jpg", cv2.IMREAD_GRAYSCALE)
-    h12 = pano.match(im2, im1)
-    result = pano.combine(im2, im1, h12, blend=True)
-    h23 = pano.match(result, im3)
-    result = pano.combine(result, im3, h23, blend=True)
-    cv2.imshow("result", pano.crop(result))
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    cam1 = video.camThread("Camera 1", 1)
-    cam2 = video.camThread("Camera 2", 0)
-
-    cam1.start()
-    cam2.start()
+    ratio_param = 0.5
+    thresh_param = 4.0
+    iter_param = 250
+    data_path_list = [os.path.join("data","airplane-"+str(i)) for i in range(1,21)]
+    for data in data_path_list:
+        vl = video.videoLoader(data)
+        (width, height) = vl.get_size()
+        imgs = vl.get_imgs()
+        vs = video.videoSplitter(30, int(width*0.6), height)
+        pano = stitch.stitcher(ratio=ratio_param, ransacThresh=thresh_param, maxIters=iter_param)
+        for i, img in enumerate(imgs):
+            img_path = os.path.join(data,"img",img)
+            (left, right) = vs.crop_rot(cv2.imread(img_path))
+            if i == 0:
+                h = pano.match(left, right)
+            result = pano.combine(left, right, h, blend=False)
+            cv2.imshow("result",result)
+            cv2.waitKey(1)
