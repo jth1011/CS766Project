@@ -40,6 +40,9 @@ class videoSplitter:
         frame_left = frame
         frame_right = imutils.translate(frame, self.trans_x, self.trans_y)
         frame_right = imutils.rotate(frame_right, self.rot)
+        #new_height = frame_right.shape[0]
+        #mid_height = round(new_height/2)
+        #offset = int(self.height/2)
         frame_left = frame_left[:, :self.crop]
         frame_right = frame_right[:, -self.crop:]
         return frame_left, frame_right, frame

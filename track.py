@@ -11,7 +11,11 @@ class tracker:
         elif option == 2:
             self.tracker = cv2.legacy.TrackerMOSSE_create()
         elif option == 3:
-            self.tracker = cv2.legacy.TrackerKCF_create()
+            self.tracker = cv2.legacy.TrackerBoosting_create()
+        elif option == 4:
+            self.tracker = cv2.legacy.TrackerTLD_create()
+        elif option == 5:
+            self.tracker = cv2.legacy.Tracker_create()
         else:
             self.tracker = cv2.legacy.TrackerMedianFlow_create()
 
@@ -27,11 +31,13 @@ class tracker:
         xB = min(box[0]+box[2], truth[0]+truth[2])
         yB = min(box[1]+box[3], truth[1]+truth[3])
 
+
         interArea = (xB - xA) * (yB - yA)
 
         boxAArea = box[2] * box[3]
         boxBArea = truth[2] * truth[3]
 
         iou = interArea / (boxAArea + boxBArea - interArea)
+        iou = max(iou, 0)
 
         return iou

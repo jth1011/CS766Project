@@ -45,7 +45,7 @@ class stitcher:
         h_translation = np.array([[1, 0, -x_min], [0, 1, -y_min], [0, 0, 1]])
 
         output_img = cv2.warpPerspective(img1, h_translation.dot(h_matrix),
-                                (x_max - x_min, y_max - y_min), flags=cv2.INTER_CUBIC)
+                                (x_max - x_min, y_max - y_min), flags=cv2.INTER_LINEAR)
 
         if blend:
             output_img2 = np.zeros_like(output_img)
