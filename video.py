@@ -30,6 +30,7 @@ class videoSplitter:
 
     def __init__(self, rot, trans, crop, bright, height, width):
         self.rot = random.randint(-rot, rot)
+        self.rot2 = random.randint(-rot, rot)
         self.trans_x = random.randint(-trans, trans)
         self.trans_y = random.randint(-trans, trans)
         self.bright = random.randint(bright[0], bright[1])
@@ -48,8 +49,12 @@ class videoSplitter:
 
         # change the rotation of the image by a small random value and cap if too large or small
         self.rot = self.rot + random.randint(-2,2)
-        self.rot = max(min(self.rot, 30), -30)
+        self.rot = max(min(self.rot, 50), -50)
         frame_right = imutils.rotate(frame_right, self.rot)
+
+        # self.rot2 = self.rot2 + random.randint(-2, 2)
+        # self.rot2 = max(min(self.rot2, 30), -30)
+        # frame_left = imutils.rotate(frame_left, self.rot2)
 
         #crop the left and right frames to make the amount of overlap smaller
         frame_left = frame_left[:, :self.crop]
