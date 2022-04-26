@@ -89,11 +89,9 @@ class stitcher:
         # Compute the blending weights for each image using distance maps
         sum = d1 + d2
         weight1 = np.nan_to_num(d1 / sum)
+        weight1 = np.dstack([weight1]*3)
         weight2 = np.nan_to_num(d2 / sum)
-        print(img1.shape," ",img2.shape)
-        print(weight1.shape," ",weight2.shape)
-        print(np.multiply(img1, weight1).shape)
-        print(np.multiply(img2, weight2).shape)
+        weight2 = np.dstack([weight2]*3)
 
         # Blend the two images together according to their weights
         blended = np.rint(np.multiply(img1, weight1) + np.multiply(img2, weight2))

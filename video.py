@@ -28,21 +28,30 @@ class videoLoader:
 
 class videoSplitter:
 
-    def __init__(self, rot, trans, jit, crop, height, width):
+    def __init__(self, rot, trans, crop, bright, height, width):
         self.rot = random.randint(-rot, rot)
-        self.trans_x = random.randint(-trans,trans)
+        self.trans_x = random.randint(-trans, trans)
         self.trans_y = random.randint(-trans, trans)
-        self.color_jit = random.randint(-jit, jit)
+        self.bright = random.randint(bright[0], bright[1])
         self.crop = crop
         self.height = height
 
     def crop_rot(self, frame):
+        # left frame is set as base image
         frame_left = frame
-        frame_right = imutils.translate(frame, self.trans_x, self.trans_y)
+
+        # add brightness constant to right frame
+        frame_right = cv2.convertScaleAbs(frame, alpha=1, beta=self.bright)
+
+        # translate the right frame by random x&y values
+        frame_right = imutils.translate(frame_right, self.trans_x, self.trans_y)
+
+        # change the rotation of the image by a small random value and cap if too large or small
+        self.rot = self.rot + random.randint(-2,2)
+        self.rot = max(min(self.rot, 30), -30)
         frame_right = imutils.rotate(frame_right, self.rot)
-        #new_height = frame_right.shape[0]
-        #mid_height = round(new_height/2)
-        #offset = int(self.height/2)
+
+        #crop the left and right frames to make the amount of overlap smaller
         frame_left = frame_left[:, :self.crop]
         frame_right = frame_right[:, -self.crop:]
         return frame_left, frame_right, frame

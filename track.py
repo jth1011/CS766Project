@@ -14,8 +14,6 @@ class tracker:
             self.tracker = cv2.legacy.TrackerBoosting_create()
         elif option == 4:
             self.tracker = cv2.legacy.TrackerTLD_create()
-        elif option == 5:
-            self.tracker = cv2.legacy.Tracker_create()
         else:
             self.tracker = cv2.legacy.TrackerMedianFlow_create()
 
