@@ -3,6 +3,7 @@ import os
 import imutils
 import random
 import numpy as np
+from distort import *
 
 
 class videoLoader:
@@ -43,6 +44,12 @@ class videoSplitter:
 
         # add brightness constant to right frame
         frame_right = cv2.convertScaleAbs(frame, alpha=1, beta=self.bright)
+
+        # shift color temperature
+        frame_right = convert_temp(frame_right, 4500)
+
+        # apply vignette effect
+        frame_right = apply_vignette(frame_right, 0.8)
 
         # translate the right frame by random x&y values
         frame_right = imutils.translate(frame_right, self.trans_x, self.trans_y)

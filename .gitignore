@@ -4,3 +4,5 @@
 *.png
 *.txt
 *.db
+
+!/resources/*
