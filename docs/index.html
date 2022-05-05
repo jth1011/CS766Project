@@ -13,7 +13,6 @@
         <h2>Object Tracking Across Stitched Video Panoramas</h2>
         <ol>
             <li><a href="#introduction">Introduction</a></li>
-            <li><a href="#related-work">Related Work</a></li>
             <li><a href="#dataset">Dataset</a></li>
             <li><a href="#framework">Framework</a>
                 <ol>
@@ -36,63 +35,66 @@
         <div id="introduction">
             <h2>1.0 Introduction</h2>
             <p>
-                &#128683 Currently under development &#128683
+				In this project we intend to implement an algorithm that automatically registers and stitches together the frames from multiple video sources to create a wide-angle or 360-degree video. This algorithm will complete the task using only the video frames (no other camera orientation data needed). The core assumption is that the images will all have been taken from approximately the same vantage point at the same time using one camera that pans from one side to the other. Image features will be found using a method known as SIFT [1], an algorithm which has been covered extensively in class. Using this stitched video, we intend to apply two different tracking algorithms to discover how they perform at the overlapping regions.
             </p>
-        </div>
-        
-        <! Related Work Section>
-        <div id="related-work">
-            <h2>2.0 Related Work</h2>
         </div>
         
         <! Dataset Section>
         <div id="dataset">
-            <h2>3.0 Dataset</h2>
+            <h2>2.0 Dataset</h2>
         </div>
         
         <! Framework Section>
         <div id="framework">
-            <h2>4.0 Framework</h2>
+            <h2>3.0 Framework</h2>
         </div>
         
         <! Panorma Subsection>
         <div id="panorama">
-            <h3>4.1 Panorama</h3>
+            <h3>3.1 Panorama</h3>
         </div>
         
         <! Object Tracking Subsection>
         <div id="object-tracking">
-            <h3>4.2 Object Tracking</h3>
+            <h3>3.2 Object Tracking</h3>
         </div>
         
         <! Results Section>
         <div id="results">
-            <h2>5.0 Results</h2>
+            <h2>4.0 Results</h2>
         </div>
         
         <! Conclusion Section>
         <div id="conclusion">
-            <h2>6.0 Conclusion</h2>
+            <h2>5.0 Conclusion</h2>
         </div>
         
         <! Observations Subsection>
         <div id="observations">
-            <h3>6.1 Observations</h3>
+            <h3>5.1 Observations</h3>
         </div>
         
         <! Challenges Subsection>
         <div id="challenges">
-            <h3>6.2 Challenges</h3>
+            <h3>5.2 Challenges</h3>
         </div>
         
         <! Future Work Subsection>
         <div id="future-work">
-            <h3>6.3 Future Work</h3>
+            <h3>5.3 Future Work</h3>
         </div>
         
         <! References Section>
         <div id="references">
-            <h2>7.0 References</h2>
+            <h2>6.0 References</h2>
+			<p>
+			<ol>
+				<li> &emsp; Yanfang Li, Yaming Wang, Wenqing Huang and Zuoli Zhang, <b>"Automatic image stitching using SIFT."</b> 2008 International Conference on Audio, Language and Image Processing, pp. 568-571. IEEE, 2008.</li>
+				<li> &emsp; Bolme, David S., J. Ross Beveridge, Bruce A. Draper, and Yui Man Lui. <b>"Visual object tracking using adaptive correlation filters."</b> 2010 IEEE computer society conference on computer vision and pattern recognition, pp. 2544-2550. IEEE, 2010.</li>
+				<li> &emsp; Yang, Yuebin, and Guillaume-Alexandre Bilodeau. <b>"Multiple object tracking with kernelized correlation filters in urban mixed traffic."</b> 2017 14th Conference on Computer and Robot Vision (CRV), pp. 209-216. IEEE, 2017.</li>
+				<li> &emsp; Held, David & Thrun, Sebastian & Savarese, Silvio. (2016). <b>"Learning to Track at 100 FPS with Deep Regression Networks."</b> https://arxiv.org/abs/1604.01802</li> 
+			</ol>
+			</p>
         </div>
     </body>
 </html>
