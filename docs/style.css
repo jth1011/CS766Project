@@ -56,3 +56,26 @@ figcaption {
 	height: auto;
 	margin: auto;
 }
+
+body {
+	font-family: "Helvetica", Sans-Serif;
+	width: 960px;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+
+.title_container {
+	background-color: #c5050c;
+	width: 100%;
+	height: auto;
+	text-align: left;
+}
+
+#crest {
+	display: inline-block;
+	justify-content: left;
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 60px;
+}
