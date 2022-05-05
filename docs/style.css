@@ -27,8 +27,32 @@ display: flex;
 justify-content: center;
 }
 
+.img-center img {
+	width: 100%;
+	height: auto;
+}
+
 figcaption {
   font-style: italic;
   padding: 2px;
   text-align: center;
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+}
+
+.container figure{
+	max-width: 50%;
+	height: auto;
+	margin-left: 2%;
+	margin-right: 2%;
+	text-align: center;
+}
+
+.container img {
+	width: 80%;
+	height: auto;
+	margin: auto;
 }
