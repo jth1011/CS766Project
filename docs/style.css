@@ -1,3 +1,14 @@
 .ref-indent {
     text-indent:30px;
 }
+
+.img-center {
+display: flex;
+justify-content: center;
+}
+
+figcaption {
+  font-style: italic;
+  padding: 2px;
+  text-align: center;
+}

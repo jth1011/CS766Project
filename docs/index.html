@@ -38,11 +38,23 @@
             <p>
 				In this project we intend to implement an algorithm that automatically registers and stitches together the frames from multiple video sources to create a wide-angle or 360-degree video. This algorithm will complete the task using only the video frames (no other camera orientation data needed). The core assumption is that the images will all have been taken from approximately the same vantage point at the same time using one camera that pans from one side to the other. Image features will be found using a method known as SIFT [1], an algorithm which has been covered extensively in class. Using this stitched video, we intend to apply two different tracking algorithms to discover how they perform at the overlapping regions. The tracking algorithm we intend to use implements Kernelized Correlation Filters and hence is labeled as the KCF Tracker [2]. This object tracking method was chosen as it is both scale invariant and has the ability to recover from object occlusion, all while being a model that is lightweight enough to be run in real time [3].
             </p>
+			<p>
+				Tracking objects across multiple cameras has several real world applications in the fields of security and entertainment.
+			</p>
         </div>
         
         <! Dataset Section>
         <div id="dataset">
             <h2>2.0 Dataset</h2>
+			<p>
+				Our group was unable to find a proper dataset that contained split video files and ground truth bounding boxes so we made the decision to generate our own data. To accomplish this we first found a standard object tracking dataset that provided us with videos of single objects and the ground truth bounding boxes those objects were contained in. We ultimately decided on using LaSOT: Large-scale Single Object Tracking (found <a href="http://vision.cs.stonybrook.edu/~lasot/index.html">here</a>) which provides over 1500 videos belonging to 70 unique object categories. The average video length is approximately 2000 frames and each video offers a varying level of tracking difficulty by means of full or partial occlusion.
+			</p>
+			<div class="img-center">
+			<figure>
+			<img src="imgs/lasot_planes.png" alt="Example Frames From LaSOT Dataset" width=800px>
+			<figcaption>Example Frames from LaSOT Planes Category</figcaption>
+			</figure>
+			</div>
         </div>
         
         <! Framework Section>
