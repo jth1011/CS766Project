@@ -1,6 +1,26 @@
+/*
+added a ref-indent class to add to text put in the references so
+first line is indented
+*/
+
 .ref-indent {
     text-indent:30px;
 }
+
+.subsection {
+	margin-left: 20px;
+}
+
+/*
+the way I am adding images is the following:
+
+<div class="img-center">
+  <figure>
+    <img src="example_img.png">
+    <figcaption> Example Text </figcaption>
+  </figure>
+</div>
+*/
 
 .img-center {
 display: flex;
