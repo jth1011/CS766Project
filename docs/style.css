@@ -11,6 +11,18 @@ first line is indented
 	margin-left: 20px;
 }
 
+.content-table a:link {
+  color: blue;
+  background-color: transparent;
+    text-decoration: none;
+}
+
+.content-table a:visited {
+  color: blue;
+  background-color: transparent;
+    text-decoration: none;
+}
+
 /*
 the way I am adding images is the following:
 

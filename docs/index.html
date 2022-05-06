@@ -3,6 +3,10 @@
 <html lang="en">
     <head>
 		<link rel="stylesheet" href="style.css">
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
 		<meta charset="utf-8">
 		<meta name="author" content="Jackson Hellmers, Cameron Craig">
 		<meta name="description" content="CS766 Final Project Webpage">
@@ -22,6 +26,7 @@
         
         <h1>CS766 Final Project</h1>
         <h2>Object Tracking Across Stitched Video Panoramas</h2>
+        <div class="content-table">
         <ol>
             <li><a href="#introduction">Introduction</a></li>
             <li><a href="#dataset">Dataset</a></li>
@@ -42,6 +47,7 @@
             </li>
             <li><a href="#references">References</a></li>
         </ol>
+        </div>
         
         <! Introduction Section>
         <div id="introduction">
@@ -108,7 +114,8 @@
         <div class="subsection" id="image-stitch">
             <h3>3.2 Image Stitching</h3>
 			<p>
-				
+				To stitch the split frames back together we need any algorithm that is able to extract a set of matching points found within both frames. There exist many algorithms that can accomplish such a task, but we decided on using the SIFT algorithm as it offers a quick and efficient framework that we are both familiar with implementing. However, not all point pairs returned by the SIFT algorithm are going to be optimal. At its base, image stitching is an overdetermined least squares problem which attempts to solve the following equation, where h represents our homography matrix. $$ A\vec{h} = \vec{0} $$ To further constrain the problem we restrict h such that it can only have unit norm. With this new constrained least squares problem we are able to redefine our equation in the following form with the eigenvector corresponding to the smallest eigenvalue being the vector which minimizes the least squares loss. $$ A^{T}A \vec{h} = \lambda \vec{h} $$
+                
 			</p>
 			<div class="container2">
 				<figure>
