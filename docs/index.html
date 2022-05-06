@@ -56,7 +56,7 @@
 			</p>
 			<div class="img-center">
 			<figure>
-			<img src="imgs/lasot_planes.png" alt="Example Frames From LaSOT Dataset" width=800px>
+			<img src="imgs/lasot_planes.png" alt="Example Frames From LaSOT Dataset">
 			<figcaption>Example Frames from LaSOT Aircrafts Category</figcaption>
 			</figure>
 			</div>
@@ -72,18 +72,25 @@
         <div class="subsection" id="data-prep">
             <h3>3.1 Data Preparation</h3>
 			<p>
-				
+				In order to have videos that we could stitch back together, we first had to take each video and split it into a left and right video source. To allow for proper reconstruction, each frame of the split videos was given an overlap. As the size of the overlap increased, the number of optimal matched points between the two videos increased as well. Each frame in the split videos had a random rotation and translation applied to it in an attempt to add some noise. We quickly realized that static augmentations were not putting a great deal of pressure on our model, as the transformation matrix would only need to be calculated once for the first pair of frames. To counter this, additional rotations and translations are applied to consecutive frames. An example input and output pair are shown below.
 			</p>
-			<div class="container">
+			<div class="container3">
 				<figure>
-				  <img src="imgs/data_left.gif" width="80%">
+				  <img src="imgs/data_orig.gif">
+				  <figcaption>Original Video</figcaption>
+				</figure>
+				<figure>
+				  <img src="imgs/data_left.gif">
 				  <figcaption>Random Augmentation: Left</figcaption>
 				</figure>
 				<figure>
-				  <img src="imgs/data_right.gif" width="80%">
+				  <img src="imgs/data_right.gif">
 				  <figcaption>Random Augmentation: Right</figcaption>
 				</figure>
 			</div>
+			<p>
+				Furthermore, we wanted to simulate the differences between camera sensors and settings by applying some color and brightness distortion to each frame for one of the videos. This created a distinct boundary between the left and right video sources that needed to be smoothened out in the section of our model dealing with image stitching.
+			</p>
         </div>
         
         <! Panorma Subsection>
@@ -92,6 +99,26 @@
 			<p>
 				
 			</p>
+			<div class="container2">
+				<figure>
+				  <img src="imgs/data_uncropped.gif">
+				  <figcaption>Uncropped</figcaption>
+				</figure>
+				<figure>
+				  <img src="imgs/data_cropped.gif">
+				  <figcaption>Cropped</figcaption>
+				</figure>
+			</div>
+			<div class="container2">
+				<figure>
+				  <img src="imgs/data_no_blend.gif">
+				  <figcaption>Unblended</figcaption>
+				</figure>
+				<figure>
+				  <img src="imgs/data_blend.gif">
+				  <figcaption>Blended</figcaption>
+				</figure>
+			</div>
         </div>
         
         <! Object Tracking Subsection>
@@ -100,6 +127,12 @@
 			<p>
 				
 			</p>
+			<div class="img-center">
+			<figure>
+			<img src="imgs/kcf_tracker.png">
+			<figcaption>KCF Tracker Architecture</figcaption>
+			</figure>
+			</div>
         </div>
         
         <! Results Section>
@@ -108,6 +141,26 @@
 			<p>
 				
 			</p>
+			<div class="container2">
+				<figure>
+				  <img src="imgs/track_orig.gif">
+				  <figcaption>Original Tracking</figcaption>
+				</figure>
+				<figure>
+				  <img src="imgs/track_stitched.gif">
+				  <figcaption>Stitched Tracking</figcaption>
+				</figure>
+			</div>
+			<div class="container2">
+				<figure>
+				  <img src="imgs/fail_bright.gif">
+				  <figcaption>Failure 1</figcaption>
+				</figure>
+				<figure>
+				  <img src="imgs/fail_overlap.gif">
+				  <figcaption>Failure 2</figcaption>
+				</figure>
+			</div>
         </div>
         
         <! Conclusion Section>

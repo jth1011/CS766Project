@@ -36,14 +36,15 @@ figcaption {
   font-style: italic;
   padding: 2px;
   text-align: center;
+  font-size: 12px;
 }
 
-.container {
+.container2 {
 	display: flex;
 	justify-content: center;
 }
 
-.container figure{
+.container2 figure{
 	max-width: 50%;
 	height: auto;
 	margin-left: 2%;
@@ -51,7 +52,27 @@ figcaption {
 	text-align: center;
 }
 
-.container img {
+.container2 img {
+	width: 80%;
+	height: auto;
+	margin: auto;
+}
+
+.container3 {
+	display: flex;
+	justify-content: center;
+}
+
+.container3 figure{
+	max-width: 33%;
+	height: auto;
+	margin-left: 2%;
+	margin-right: 2%;
+	font-size: 12px;
+	text-align: center;
+}
+
+.container3 img {
 	width: 80%;
 	height: auto;
 	margin: auto;
