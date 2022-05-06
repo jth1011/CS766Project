@@ -11,7 +11,13 @@
 
     <body>
         <div class="title_container">
+            <div>
             <img id="crest" src="https://wisconsintechnologycouncil.com/wp-content/uploads/2019/11/color-UWcrest-print-scaled.png" alt="UW Academic Crest">
+            </div>
+            <div>
+                <a href="https://github.com/jth1011/CS766Project">Repository Link</a>
+                <a href="https://docs.google.com/presentation/d/138_rweMtrbvu958mmiug_Ikkh0QbJ4Xa9LWIaSgReYs/edit?usp=sharing">Presentation Link</a>
+            </div>
         </div>
         
         <h1>CS766 Final Project</h1>
@@ -40,6 +46,11 @@
         <! Introduction Section>
         <div id="introduction">
             <h2>1.0 Introduction</h2>
+            <div class="img-center">
+			<figure>
+			<img src="imgs/intro_pic.png">
+			</figure>
+			</div>
             <p>
 				In this project we intend to implement an algorithm that automatically registers and stitches together the frames from multiple video sources to create a wide-angle or 360-degree video. This algorithm will complete the task using only the video frames (no other camera orientation data needed). The core assumption is that the images will all have been taken from approximately the same vantage point at the same time using one camera that pans from one side to the other. Image features will be found using a method known as SIFT [1], an algorithm which has been covered extensively in class. Using this stitched video, we intend to apply two different tracking algorithms to discover how they perform at the overlapping regions. The tracking algorithm we intend to use implements Kernelized Correlation Filters and hence is labeled as the KCF Tracker [2]. This object tracking method was chosen as it is both scale invariant and has the ability to recover from object occlusion, all while being a model that is lightweight enough to be run in real time [3].
             </p>
