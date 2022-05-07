@@ -65,9 +65,39 @@
             <p>
 				In this project we intend to implement an algorithm that automatically registers and stitches together the frames from multiple video sources to create a wide-angle or 360-degree video. This algorithm will complete the task using only the video frames (no other camera orientation data needed). The core assumption is that the images will all have been taken from approximately the same vantage point at the same time using one camera that pans from one side to the other. Image features will be found using a method known as SIFT [1], an algorithm which has been covered extensively in class. Using this stitched video, we intend to apply two different tracking algorithms to discover how they perform at the overlapping regions. The tracking algorithm we intend to use implements Kernelized Correlation Filters and hence is labeled as the KCF Tracker [2]. This object tracking method was chosen as it is both scale invariant and has the ability to recover from object occlusion, all while being a model that is lightweight enough to be run in real time [3].
             </p>
+
+            <div class="img-center">
+                <figure>
+                    <img style="width:350px !important;" src="https://cdn11.bigcommerce.com/s-zbabt7ht4y/images/stencil/1280x1280/products/53060/81789/axis-01500-001-pic1__95502.1579690899.jpg?c=2&imbypass=on" alt="Axis P3719-PLE 360 degree IP security camera.">
+                    <figcaption>Axis P3719-PLE 360 degree IP security camera.</figcaption>
+                </figure>
+            </div>
+
 			<p>
-				Tracking objects across multiple cameras has several real world applications in the fields of security and entertainment.
+				Tracking objects across multiple cameras has several real world applications, including surveillance cameras and entertainment. In recent years the surveillance camera industry has begun producing panoramic array security cameras. These cameras use multiple image sensors and multiple lenses contained within a single housing to simultaneously capture high resolution video across a wide field of view (sometimes up to 360 degrees). These cameras can be an efficient and cost effective solution when there is a need to cover a large, open area for surveillance. Compared to using multiple traditional cameras, just one panoramic camera may be able to view the entire area of interest. In order for the video captured by the cameras to be useful to an end-user, the separate video signals coming from the separate sensors should be combined in a way that allows the user to “pan” and “tilt” a viewport in software over a large continuous video canvas. This continuous canvas of video is achieved by stitching each frame of video from each camera. A powerful feature that has emerged in surveillance software is the ability to track the position of objects like persons, vehicles, high value items, etc. When combining this tracking technology with panoramic cameras, it is very important to characterize and understand how a real-time object tracking algorithm will perform when subjected to the various image artifacts that arise when stitching video.
 			</p>
+
+            <div class="img-center">
+                <figure>
+                    <img style="width:350px !important;" src="https://sporttechie-prod.s3.amazonaws.com/2016/11/Picture1kee.png" alt="Keemotion/Synergy Sports dual camera array.">
+                    <figcaption>Keemotion/Synergy Sports dual camera array.</figcaption>
+                </figure>
+            </div>
+
+            <p>
+                Another important application that combines video stitching with object tracking is live sports camera automation. Many high school and college gymnasiums host a large number of different sporting events over the course of a year. While a few high-profile events may have the budget to afford a dedicated live television production, the vast majority of games do not have these resources. However, many games played in high school and college gyms still have fans that would like to watch from home. Especially during disruptions like the Covid-19 pandemic, it is important to provide fans with a way to enjoy these events remotely. One solution to this problem that has emerged in recent years is an automated live streaming camera system. While a static camera with a wide lens may be able to capture the action during a game, viewers usually prefer to see a more zoomed-in perspective that follows the action (e.g. panning left and right during a basketball game as players run back and forth). This system employs two or three static cameras mounted inside an enclosure, each with their optical centers placed close together, and angled to capture a different part of the playing surface. [5]
+            </p>
+
+            <div class="img-center">
+                <figure>
+                    <img style="width:550px !important;" src="https://simplecore.intel.com/newsroom/wp-content/uploads/sites/11/2019/03/keemotion-2x1.jpg" alt="Real-time player tracking on a stitched video canvas.">
+                    <figcaption>Real-time player tracking on a stitched video canvas.</figcaption>
+                </figure>
+            </div>
+
+            <p>
+                The video signals from each camera are stitched onto a single image plane, and an object detection and tracking algorithm finds the locations of players in the game. The software fits a bounding box around the players, and, using a smoothing algorithm to avoid abrupt changes, pans a cropped viewing window back and forth on the image plane to simulate the motion of a camera on a tripod following the players. This cropped view can then be live-streamed to social media platforms to allow parents and other viewers to watch the game from home. Two key advantages of this system are that no human operator is required to operate the camera, and there are no moving parts in the system, which reduces mechanical wear over the life of the system.
+            </p>
         </div>
         
         <! Dataset Section>
@@ -243,6 +273,7 @@
 				<li><p class="ref-indent">Bolme, David S., J. Ross Beveridge, Bruce A. Draper, and Yui Man Lui. <b>"Visual object tracking using adaptive correlation filters."</b> 2010 IEEE computer society conference on computer vision and pattern recognition, pp. 2544-2550. IEEE, 2010.</p></li>
 				<li><p class="ref-indent">Yang, Yuebin, and Guillaume-Alexandre Bilodeau. <b>"Multiple object tracking with kernelized correlation filters in urban mixed traffic."</b> 2017 14th Conference on Computer and Robot Vision (CRV), pp. 209-216. IEEE, 2017.</p></li>
 				<li><p class="ref-indent">Held, David & Thrun, Sebastian & Savarese, Silvio. (2016). <b>"Learning to Track at 100 FPS with Deep Regression Networks."</b> https://arxiv.org/abs/1604.01802</p></li> 
+                <li><p class="ref-indent"><b>“Live sports production,”</b> Synergy Sports, 14-Jan-2022. [Online]. Available: https://synergysports.com/solutions/live-sport-production/.</p></li> 
 			</ol>
 			</p>
         </div>
