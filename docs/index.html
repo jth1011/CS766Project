@@ -65,7 +65,7 @@
 			</figure>
 			</div>
             <p>
-				In this project we intend to implement an algorithm that automatically registers and stitches together the frames from multiple video sources to create a wide-angle or 360-degree video. This algorithm will complete the task using only the video frames (no other camera orientation data needed). The core assumption is that the images will all have been taken from approximately the same vantage point at the same time using one camera that pans from one side to the other. Image features will be found using a method known as SIFT [1], an algorithm which has been covered extensively in class. Using this stitched video, we intend to apply two different tracking algorithms to discover how they perform at the overlapping regions. The tracking algorithm we intend to use implements Kernelized Correlation Filters and hence is labeled as the KCF Tracker [2]. This object tracking method was chosen as it is both scale invariant and has the ability to recover from object occlusion, all while being a model that is lightweight enough to be run in real time [3].
+				In this project we intend to implement an algorithm that automatically registers and stitches together the frames from multiple video sources to create a wide-angle or 360-degree video. This algorithm will complete the task using only the video frames (no other camera orientation data needed). The core assumption is that the images will all have been taken from approximately the same vantage point at the same time using one camera that pans from one side to the other. Image features will be found using a method known as SIFT [1], an algorithm which has been covered extensively in class. Using this stitched video, we intend to apply a tracking algorithm to discover how it performs at the overlapping regions. The tracking algorithm we intend to use implements Kernelized Correlation Filters and hence is labeled as the KCF Tracker [2]. This object tracking method was chosen as it is both scale invariant and has the ability to recover from object occlusion, all while being a model that is lightweight enough to be run in real time [3].
             </p>
 
             <div class="img-center">
@@ -275,6 +275,12 @@
         <! Future Work Subsection>
         <div class="subsection" id="future-work">
             <h3>5.3 Future Work</h3>
+            <p>
+                One opportunity for further research is to experiment with additional forms of distortion on the split videos. For example, the white balance of the videos can be shifted, which may simulate a mismatch between the different image sensors used. Also, more complicated manipulations of the contrast and color curves may further simulate the imbalances between different sensors.
+            </p>
+            <p>
+                It would also be interesting to expand this research to include different tracking algorithms. For this project we chose the KCF tracker primarily because it was well-suited for real-time tracking. However, there are many other tracking algorithms and techniques available, including some which use deep learning models to locate and follow objects. It would be interesting to experiment with these models to evaluate their performance on stitched video, and to see how their performance compares to the KCF tracker we used here.
+            </p>
         </div>
         
         <! References Section>
