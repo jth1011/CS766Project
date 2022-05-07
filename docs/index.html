@@ -191,6 +191,9 @@
 			<figcaption>Example of a Bad (Left), Mediocre (Middle), and Excellent (Right) IoU</figcaption>
 			</figure>
 			</div>
+			<p>
+				For our tests we took 20 different videos from the aircraft category of the LaSOT dataset. Each video was clipped to include 100 frames and the data augmentations described above were applied. We measured the IoU of every frame (except for the first frame as it will always have an IoU of 1) for each of the 20 videos and recorded the average IoU across all frames. To test the models resilience to noise and distortion we additionally tested a wide range of hyperparameters, seeing how the performance degraded by minimizing the amount of frame overlap or by maximizing the amount of color and brighness distortion introduced.
+			</p>
         </div>
         <div class="subsection" id="successes">
             <h3>4.2 Successes</h3>
