@@ -153,7 +153,7 @@
         <div class="subsection" id="object-tracking">
             <h3>3.3 Object Tracking</h3>
 			<p>
-				Our tracking algorithm makes use of kernelized filters to follow objects from frame to frame. By initializing the tracker with the ground truth bounding box from the first frame of the original video, the algorithm is able to learn the general structure and color of the tracked object. Using this information, the algorithm is able to make predictions on the objects location by finding areas of the video that correlate most greatly with the learned filter. With each consecutive frame the algorithm is better able to update its learned filter by using a combination data collected from all previous and current frames. Illustrated below is the general architecture of the KCF model we implemented.
+				Our tracking algorithm makes use of kernelized filters to follow objects from frame to frame. By initializing the tracker with the ground truth bounding box from the first frame of the original video, the algorithm is able to learn the general structure and color of the tracked object. Using this information, the algorithm is able to make predictions on the objects location by finding areas of the video that correlate most greatly with the learned filter. With each consecutive frame the algorithm is better able to update its learned filter by using a combination data collected from all previous and current frames [2]. Illustrated below is the general architecture of the KCF model we implemented.
 			</p>
 			<div class="img-center">
 			<figure>
@@ -162,7 +162,7 @@
 			</figure>
 			</div>
             <p>
-                Examining the figure we are able to extract a few of the highlights and drawbacks of the model. The first major takeaway is the models ability to store and remember previous kernel filters. Becuase of this the tracking algorithm is resistant to object occlusion and dynamic object velocities. The model does not rely on continuity as each update looks for the tracked object on a global scale instead of locally. Additionally, this allow the model to be invariant to changes in scale when using a scale-invariant kernel function to generate the filters. One of the main drawbacks of this model is its inability to track objects that have a fluid or variable shape/structure. Knowing that the kernelized filters are constructed using information only present in previous frames, it makes sense that an object undergoing a rapid transition or transformation might cause the algorithm to misidentify the tracked object. A few of the failure cases highlight this issue by failing to track a plane after it experiences a swift change in brightness and color.
+                Examining the figure we are able to extract a few of the highlights and drawbacks of the model. The first major takeaway is the models ability to store and remember previous kernel filters. Becuase of this the tracking algorithm is resistant to object occlusion and dynamic object velocities. The model does not rely on continuity as each update looks for the tracked object on a global scale instead of locally. Additionally, this allow the model to be invariant to changes in scale when using a scale-invariant kernel function to generate the filters [3]. One of the main drawbacks of this model is its inability to track objects that have a fluid or variable shape/structure. Knowing that the kernelized filters are constructed using information only present in previous frames, it makes sense that an object undergoing a rapid transition or transformation might cause the algorithm to misidentify the tracked object. A few of the failure cases highlight this issue by failing to track a plane after it experiences a swift change in brightness and color [3].
             </p>
         </div>
         
@@ -176,7 +176,15 @@
         <div class="subsection" id="evaluation-metric">
             <h3>4.1 Evaluation Metrics</h3>
             <p>
-                
+                We do not intend to empirically evaluate the stitched video frames and instead will primarily be testing the
+                effectiveness of the tracking algorithms. In order to develop the metrics needed for evaluation we will
+                generate footage with ground truth bounding boxes around the tracked object. The output of the tracking
+                algorithms can then be compared to the ground truth by assessing the commonly used Intersection over
+                Union (IOU) distance metric. By taking the ratio of the intersection of the bounding boxes against their union
+                we get a simple metric on the range of [0, 1], with an optimally predicted box returning a value of 1.
+            </p>
+            <p>
+                NEED TO ADD IMAGE OF IOU EXAMPLE
             </p>
         </div>
         <div class="subsection" id="successes">
