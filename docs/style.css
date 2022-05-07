@@ -11,16 +11,14 @@ first line is indented
 	margin-left: 20px;
 }
 
-.content-table a:link {
+.content-table a {
   color: blue;
   background-color: transparent;
     text-decoration: none;
 }
 
-.content-table a:visited {
-  color: blue;
-  background-color: transparent;
-    text-decoration: none;
+.content-table a:hover {
+    color: lightgray;
 }
 
 /*
@@ -116,14 +114,13 @@ body {
     text-decoration: none;
 }
 
-.title_container a:link {
+.title_container a {
   color: white;
   background-color: transparent;
 }
 
-.title_container a:visited {
-  color: white;
-  background-color: transparent;
+.title_container a:hover {
+    color: gray;
 }
 
 #crest {
