@@ -176,19 +176,27 @@
         <div class="subsection" id="evaluation-metric">
             <h3>4.1 Evaluation Metrics</h3>
             <p>
-                We do not intend to empirically evaluate the stitched video frames and instead will primarily be testing the
-                effectiveness of the tracking algorithms. In order to develop the metrics needed for evaluation we will
-                generate footage with ground truth bounding boxes around the tracked object. The output of the tracking
-                algorithms can then be compared to the ground truth by assessing the commonly used Intersection over
-                Union (IOU) distance metric. By taking the ratio of the intersection of the bounding boxes against their union
-                we get a simple metric on the range of [0, 1], with an optimally predicted box returning a value of 1.
+                We do not intend to empirically evaluate the stitched video frames and instead focused primarily on testing the
+                effectiveness of the tracking algorithms. We compared the output of the tracking algorithms against the ground truth by assessing the commonly used Intersection over Union (IoU) metric. This metric takes the ratio of the intersection of the bounding boxes against their union yielding a range of [0, 1], with an optimally predicted box returning a value of 1. Shown below is the equation for calculating the IoU as well as a few examples demonstrating varying degrees of bounding box overlap.
             </p>
-            <p>
-                NEED TO ADD IMAGE OF IOU EXAMPLE
-            </p>
+            <div class="img-center">
+			<figure>
+			<img src="imgs/iou1.png">
+			<figcaption>Mathematical Breakdown of IoU</figcaption>
+			</figure>
+			</div>
+			<div class="img-center">
+			<figure>
+			<img src="imgs/iou2.png">
+			<figcaption>Example of a Bad (Left), Mediocre (Middle), and Excellent (Right) IoU</figcaption>
+			</figure>
+			</div>
         </div>
         <div class="subsection" id="successes">
             <h3>4.2 Successes</h3>
+			<p>
+				We found that a majoirty of our tests performed very well. 
+			</p>
 			<div class="container2">
 				<figure>
 				  <img src="imgs/track_orig.gif">
@@ -202,6 +210,9 @@
         </div>
         <div class="subsection" id="failures">
             <h3>4.3 Failures</h3>
+			<p>
+				
+			</p>
 			<div class="container2">
 				<figure>
 				  <img src="imgs/fail_bright.gif">
