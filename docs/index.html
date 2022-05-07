@@ -16,7 +16,8 @@
     <body>
         <div class="title_container">
             <div>
-            <img id="crest" src="https://wisconsintechnologycouncil.com/wp-content/uploads/2019/11/color-UWcrest-print-scaled.png" alt="UW Academic Crest">
+			<a href="https://www.cs.wisc.edu" style="padding-left: 0px;">
+            <img id="crest" src="https://wisconsintechnologycouncil.com/wp-content/uploads/2019/11/color-UWcrest-print-scaled.png" alt="UW Academic Crest"></a>
             </div>
             <div>
                 <a href="https://github.com/jth1011/CS766Project">Repository</a>
@@ -199,39 +200,50 @@
         <! Results Section>
         <div id="results">
             <h2>4.0 Results</h2>
-			<p>
-				
-			</p>
         </div>
         <div class="subsection" id="evaluation-metric">
             <h3>4.1 Evaluation Metrics</h3>
             <p>
-                We do not intend to empirically evaluate the stitched video frames and instead will primarily be testing the
-                effectiveness of the tracking algorithms. In order to develop the metrics needed for evaluation we will
-                generate footage with ground truth bounding boxes around the tracked object. The output of the tracking
-                algorithms can then be compared to the ground truth by assessing the commonly used Intersection over
-                Union (IOU) distance metric. By taking the ratio of the intersection of the bounding boxes against their union
-                we get a simple metric on the range of [0, 1], with an optimally predicted box returning a value of 1.
+                We do not intend to empirically evaluate the stitched video frames and instead focused primarily on testing the
+                effectiveness of the tracking algorithms. We compared the output of the tracking algorithms against the ground truth by assessing the commonly used Intersection over Union (IoU) metric. This metric takes the ratio of the intersection of the bounding boxes against their union yielding a range of [0, 1], with an optimally predicted box returning a value of 1. Shown below is the equation for calculating the IoU as well as a few examples demonstrating varying degrees of bounding box overlap.
             </p>
-            <p>
-                NEED TO ADD IMAGE OF IOU EXAMPLE
-            </p>
+            <div class="img-center">
+			<figure>
+			<img src="imgs/iou1.png">
+			<figcaption>Mathematical Breakdown of IoU</figcaption>
+			</figure>
+			</div>
+			<div class="img-center">
+			<figure>
+			<img src="imgs/iou2.png">
+			<figcaption>Example of a Bad (Left), Mediocre (Middle), and Excellent (Right) IoU</figcaption>
+			</figure>
+			</div>
+			<p>
+				For our tests we took 20 different videos from the aircraft category of the LaSOT dataset. Each video was clipped to include 100 frames and the data augmentations described above were applied. We measured the IoU of every frame (except for the first frame as it will always have an IoU of 1) for each of the 20 videos and recorded the average IoU across all frames. To test the models resilience to noise and distortion we additionally tested a wide range of hyperparameters, seeing how the performance degraded by minimizing the amount of frame overlap or by maximizing the amount of color and brighness distortion introduced.
+			</p>
         </div>
         <div class="subsection" id="successes">
             <h3>4.2 Successes</h3>
+			<p>
+				We found that a majoirty of our tests performed very well. Performing the test measuring IoU, mentioned above, we found that the tracking algorithm achieved an average IoU of 0.700 on stitched videos. Compared to the average IoU of 0.775 recorded when running the algorithm on the original videos, this puts our models performance within 10% of the baseline. Shown below are two videos to emphasize the similarities and differences between a successful trial and its corresponding original video. It is clear to see that the tracking algorithm performs identically on both videos for a majority of the frames.
+			</p>
 			<div class="container2">
 				<figure>
 				  <img src="imgs/track_orig.gif">
-				  <figcaption>Original Tracking</figcaption>
+				  <figcaption>Tracking on Original Video</figcaption>
 				</figure>
 				<figure>
 				  <img src="imgs/track_stitched.gif">
-				  <figcaption>Stitched Tracking</figcaption>
+				  <figcaption>Tracking on Stitched Video</figcaption>
 				</figure>
 			</div>
         </div>
         <div class="subsection" id="failures">
             <h3>4.3 Failures</h3>
+			<p>
+				Despite performing well on normal hyperparameter values, we were able to able to draw out failure cases but pushing these values to their respecitve extremes. For brightness, we found that adjusting that brightness of one frame by +/- 40 with respect to a frame from the other video would cause too much contrast in the overlap region. For overlap, we found that reducing the amount of overlap to 2% of the total video width became to narrow for SIFT to find enough optimal points. This lack of points resulted in the video frames stitching together incorrectly and would complete derail the tracking algorithm. Exemplified below are two example cases, each belonging to one of the two cases detailed above.
+			</p>
 			<div class="container2">
 				<figure>
 				  <img src="imgs/fail_bright.gif">
