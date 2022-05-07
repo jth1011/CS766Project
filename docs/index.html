@@ -106,7 +106,7 @@
         <div id="dataset">
             <h2>2.0 Dataset</h2>
 			<p>
-				Our group was unable to find a proper dataset that contained split video files and ground truth bounding boxes so we made the decision to generate our own data. To accomplish this we first found a standard object tracking dataset that provided us with videos of single objects and the ground truth bounding boxes those objects were contained in. We ultimately decided on using LaSOT: Large-scale Single Object Tracking (found <a href="http://vision.cs.stonybrook.edu/~lasot/index.html">here</a>) which provides over 1500 videos belonging to 70 unique object categories. The average video length is approximately 2000 frames and each video offers a varying level of tracking difficulty by means of full or partial occlusion.
+				Our group was unable to find a proper dataset that contained split video files and ground truth bounding boxes so we made the decision to generate our own data. To accomplish this we first found a standard object tracking dataset that provided us with videos of single objects and the ground truth bounding boxes those objects were contained in. We ultimately decided on using LaSOT: Large-scale Single Object Tracking (found <a href="http://vision.cs.stonybrook.edu/~lasot/index.html">here</a>) which provides over 1500 videos belonging to 70 unique object categories. The average video length is approximately 2000 frames, and each video offers a varying level of tracking difficulty by means of full or partial occlusion.
 			</p>
 			<div class="img-center">
 			<figure>
@@ -143,7 +143,7 @@
 				</figure>
 			</div>
 			<p>
-				Furthermore, we wanted to simulate the differences between camera sensors and settings by applying some color and brightness distortion to each frame for one of the videos. This created a distinct boundary between the left and right video sources that needed to be smoothened out in the section of our model dealing with image stitching.
+				Furthermore, we wanted to simulate the differences between camera sensors and settings by applying some color and brightness distortion to each frame for one of the videos. This created a distinct boundary between the left and right video sources that needed to be smoothed out in the section of our model dealing with image stitching.
 			</p>
         </div>
         
@@ -151,10 +151,10 @@
         <div class="subsection" id="image-stitch">
             <h3>3.2 Image Stitching</h3>
 			<p>
-				To stitch the split frames back together we need any algorithm that is able to extract a set of matching points found within both frames. There exist many algorithms that can accomplish such a task, but we decided on using the SIFT algorithm as it offers a quick and efficient framework that we are both familiar with implementing. However, not all point pairs returned by the SIFT algorithm are going to be optimal. At its base, image stitching is an overdetermined least squares problem which attempts to solve the following equation, where h represents our homography matrix. $$ A\vec{h} = \vec{0} $$ To further constrain the problem we restrict h such that it can only have unit norm. With this new constrained least squares problem we are able to redefine our equation in the following form with the eigenvector corresponding to the smallest eigenvalue being the vector which minimizes the least squares loss. $$ A^{T}A \vec{h} = \lambda \vec{h} $$ However, minimizing square loss does not gurantee that we have found the most optimal solution as the SIFT algorithm is likely to return some noneoptimal point pairs. Alternatively, iterating through all matched SIFT points and finding the global minimum is a computationally expensive process, so instead we implement random sampling (RANSAC). 
+				To stitch the split frames back together we need any algorithm that is able to extract a set of matching points found within both frames. There exist many algorithms that can accomplish such a task, but we decided on using the SIFT algorithm as it offers a quick and efficient framework that we are both familiar with implementing. However, not all point pairs returned by the SIFT algorithm are going to be optimal. At its base, image stitching is an overdetermined least squares problem which attempts to solve the following equation, where h represents our homography matrix. $$ A\vec{h} = \vec{0} $$ To further constrain the problem we restrict h such that it can only have unit norm. With this new constrained least squares problem we are able to redefine our equation in the following form with the eigenvector corresponding to the smallest eigenvalue being the vector which minimizes the least squares loss. $$ A^{T}A \vec{h} = \lambda \vec{h} $$ However, minimizing squared loss does not guarantee that we have found the most optimal solution, as the SIFT algorithm is likely to return some non-optimal point pairs. Alternatively, iterating through all matched SIFT points and finding the global minimum is a computationally expensive process, so instead we implement random sampling (RANSAC). 
 			</p>
             <p>
-                Using the SIFT and RANSAC implementations detailed above we were able to reliably generate real-time stitched frames using the data from the split video sources. A side effect of the random rotations and homography projection was that each stitched video had large black boxes on the perimeter. While this would not be an issue for typical usage, we found the offset shifted the image enough that the ground truth bounding boxes we needed to evaluate our model were no longer were in the correct locations.  To move the bounding boxes back to their correct location we apply a dynamic crop that works to remove any blank areas from the  final stitched video. Shown below are examples of output videos before and after the cropping occurs.
+                Using the SIFT and RANSAC implementations detailed above we were able to reliably generate real-time stitched frames using the data from the split video sources. A side effect of the random rotations and homography projection was that each stitched video had large black boxes on the perimeter. While this would not be an issue for typical usage, we found the offset shifted the image enough that the ground truth bounding boxes that we needed to evaluate our model were no longer in the correct locations. To move the bounding boxes back to their correct location we apply a dynamic crop that works to remove any blank areas from the final stitched video. Shown below are examples of output videos before and after the cropping occurs.
             </p>
 			<div class="container2">
 				<figure>
@@ -167,7 +167,7 @@
 				</figure>
 			</div>
             <p>
-                As mentioned earlier in the Data Preparation section, in an attempt to simulate inputs from different recording devices we added random color distortion and brightness offsets to the frames in the right split video. Our final step in the image stitching process was to smooth out the overlap between the left and right frames to make the distinct boundary less apparent. This is achieved by taking an average of the pixels within the overlap. Pixels closer to certain edge of the overlap will be influenced greater by information from that image (e.g. left pixels and left image). The following videos outline the contrast between smoothened and unsmoothened frames.
+                As mentioned earlier in the Data Preparation section, in an attempt to simulate inputs from different recording devices we added random color distortion and brightness offsets to the frames in the right split video. Our final step in the image stitching process was to smooth out the overlap between the left and right frames to make the distinct boundary less apparent. This is achieved by taking an average of the pixels within the overlap. Pixels closer to certain edge of the overlap will be influenced greater by information from that image (e.g. left pixels and left image). The following videos outline the contrast between smoothed and unsmoothed frames.
             </p>
 			<div class="container2">
 				<figure>
@@ -185,7 +185,7 @@
         <div class="subsection" id="object-tracking">
             <h3>3.3 Object Tracking</h3>
 			<p>
-				Our tracking algorithm makes use of kernelized filters to follow objects from frame to frame. By initializing the tracker with the ground truth bounding box from the first frame of the original video, the algorithm is able to learn the general structure and color of the tracked object. Using this information, the algorithm is able to make predictions on the objects location by finding areas of the video that correlate most greatly with the learned filter. With each consecutive frame the algorithm is better able to update its learned filter by using a combination data collected from all previous and current frames [2]. Illustrated below is the general architecture of the KCF model we implemented.
+				Our tracking algorithm makes use of kernelized filters to follow objects from frame to frame. By initializing the tracker with the ground truth bounding box from the first frame of the original video, the algorithm is able to learn the general structure and color of the tracked object. Using this information, the algorithm is able to make predictions on the object's location by finding areas of the video that correlate most greatly with the learned filter. With each consecutive frame, the algorithm is better able to update its learned filter by using a combination of data collected from all previous and current frames [2]. Illustrated below is the general architecture of the KCF model we implemented.
 			</p>
 			<div class="img-center">
 			<figure>
@@ -194,7 +194,7 @@
 			</figure>
 			</div>
             <p>
-                Examining the figure we are able to extract a few of the highlights and drawbacks of the model. The first major takeaway is the models ability to store and remember previous kernel filters. Becuase of this the tracking algorithm is resistant to object occlusion and dynamic object velocities. The model does not rely on continuity as each update looks for the tracked object on a global scale instead of locally. Additionally, this allow the model to be invariant to changes in scale when using a scale-invariant kernel function to generate the filters [3]. One of the main drawbacks of this model is its inability to track objects that have a fluid or variable shape/structure. Knowing that the kernelized filters are constructed using information only present in previous frames, it makes sense that an object undergoing a rapid transition or transformation might cause the algorithm to misidentify the tracked object. A few of the failure cases highlight this issue by failing to track a plane after it experiences a swift change in brightness and color [3].
+                Examining the figure, we are able to extract a few of the highlights and drawbacks of the model. The first major takeaway is the model's ability to store and remember previous kernel filters. Becuase of this the tracking algorithm is resistant to object occlusion and dynamic object velocities. The model does not rely on continuity, as each update looks for the tracked object on a global scale instead of locally. Additionally, this allows the model to be invariant to changes in scale when using a scale-invariant kernel function to generate the filters [3]. One of the main drawbacks of this model is its inability to track objects that have a fluid or variable shape/structure. Knowing that the kernelized filters are constructed using information only present in previous frames, it makes sense that an object undergoing a rapid transition or transformation might cause the algorithm to misidentify the tracked object. A few of the failure cases highlight this issue by failing to track a plane after it experiences a swift change in brightness and color [3].
             </p>
         </div>
         
@@ -221,13 +221,13 @@
 			</figure>
 			</div>
 			<p>
-				For our tests we took 20 different videos from the aircraft category of the LaSOT dataset. Each video was clipped to include 100 frames and the data augmentations described above were applied. We measured the IoU of every frame (except for the first frame as it will always have an IoU of 1) for each of the 20 videos and recorded the average IoU across all frames. To test the models resilience to noise and distortion we additionally tested a wide range of hyperparameters, seeing how the performance degraded by minimizing the amount of frame overlap or by maximizing the amount of color and brighness distortion introduced.
+				For our tests we took 20 different videos from the aircraft category of the LaSOT dataset. Each video was clipped to include 100 frames, and the data augmentations described above were applied. We measured the IoU of every frame (except for the first frame as it will always have an IoU of 1) for each of the 20 videos and recorded the average IoU across all frames. To test the model's resilience to noise and distortion we additionally tested a wide range of hyperparameters, seeing how the performance degraded by minimizing the amount of frame overlap or by maximizing the amount of color and brighness distortion introduced.
 			</p>
         </div>
         <div class="subsection" id="successes">
             <h3>4.2 Successes</h3>
 			<p>
-				We found that a majoirty of our tests performed very well. Performing the test measuring IoU, mentioned above, we found that the tracking algorithm achieved an average IoU of 0.700 on stitched videos. Compared to the average IoU of 0.775 recorded when running the algorithm on the original videos, this puts our models performance within 10% of the baseline. Shown below are two videos to emphasize the similarities and differences between a successful trial and its corresponding original video. It is clear to see that the tracking algorithm performs identically on both videos for a majority of the frames.
+				We found that a majoirty of our tests performed very well. Performing the test measuring IoU, mentioned above, we found that the tracking algorithm achieved an average IoU of 0.700 on stitched videos. Compared to the average IoU of 0.775 recorded when running the algorithm on the original videos, this puts our model's performance within 10% of the baseline. Shown below are two videos to emphasize the similarities and differences between a successful trial and its corresponding original video. It is clear to see that the tracking algorithm performs identically on both videos for a majority of the frames.
 			</p>
 			<div class="container2">
 				<figure>
@@ -243,7 +243,7 @@
         <div class="subsection" id="failures">
             <h3>4.3 Failures</h3>
 			<p>
-				Despite performing well on normal hyperparameter values, we were able to able to draw out failure cases but pushing these values to their respecitve extremes. For brightness, we found that adjusting that brightness of one frame by +/- 40 with respect to a frame from the other video would cause too much contrast in the overlap region. For overlap, we found that reducing the amount of overlap to 2% of the total video width became to narrow for SIFT to find enough optimal points. This lack of points resulted in the video frames stitching together incorrectly and would complete derail the tracking algorithm. Exemplified below are two example cases, each belonging to one of the two cases detailed above.
+				Despite performing well on normal hyperparameter values, we were able to draw out failure cases by pushing these values to their respective extremes. For brightness, we found that adjusting that brightness of one frame by +/- 40 with respect to a frame from the other video would cause too much contrast in the overlap region. For overlap, we found that reducing the amount of overlap to 2% of the total video width became too narrow for SIFT to find enough optimal points. This lack of points resulted in the video frames stitching together incorrectly and would completely derail the tracking algorithm. Exemplified below are two example cases, each belonging to one of the two cases detailed above.
 			</p>
 			<div class="container2">
 				<figure>
